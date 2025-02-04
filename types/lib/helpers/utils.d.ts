@@ -1,3 +1,18 @@
+/**
+ * Safely check if a file path exists without crashing due to a lack of permissions
+ *
+ * @param {String} filePath File path
+ * @Boolean True if the path exists. False otherwise
+ */
+export function safeExistsSync(filePath: string): boolean;
+/**
+ * Safely create a directory without crashing due to a lack of permissions
+ *
+ * @param {String} filePath File path
+ * @param options {Options} mkdir options
+ * @Boolean True if the path exists. False otherwise
+ */
+export function safeMkdirSync(filePath: string, options: Options): string;
 export function shouldFetchLicense(): boolean;
 export function shouldFetchVCS(): boolean;
 export function getJavaCommand(): string;
@@ -1365,6 +1380,7 @@ export function isPartialTree(dependencies: any[], componentsCount?: number): bo
  */
 export function recomputeScope(pkgList: any[], dependencies: any[]): any[];
 export const dirNameStr: string;
+export const isSecureMode: any;
 export const isWin: boolean;
 export const isMac: boolean;
 export let ATOM_DB: string;
