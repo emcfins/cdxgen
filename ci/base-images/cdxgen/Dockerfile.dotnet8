@@ -5,7 +5,7 @@ LABEL maintainer="CycloneDX" \
       org.opencontainers.image.source="https://github.com/CycloneDX/cdxgen" \
       org.opencontainers.image.url="https://github.com/CycloneDX/cdxgen" \
       org.opencontainers.image.version="rolling" \
-      org.opencontainers.image.vendor="AppThreat" \
+      org.opencontainers.image.vendor="CycloneDX" \
       org.opencontainers.image.licenses="Apache-2.0" \
       org.opencontainers.image.title="cdxgen" \
       org.opencontainers.image.description="Rolling image with cdxgen SBOM generator for dotnet 8 apps" \
@@ -34,7 +34,7 @@ RUN set -e; \
             ;; \
         *) echo >&2 "error: unsupported architecture: '$ARCH_NAME'"; exit 1 ;; \
     esac \
-    && cd /opt/cdxgen && corepack enable && corepack pnpm install --prod --package-import-method copy && corepack pnpm cache delete \
+    && cd /opt/cdxgen && corepack enable && corepack pnpm install --config.strict-dep-builds=true --prod --package-import-method copy && corepack pnpm cache delete \
     && curl -L https://github.com/owasp-dep-scan/dosai/releases/latest/download/Dosai${DOSAI_ARCH_SUFFIX} -o /usr/local/bin/dosai \
     && chmod +x /usr/local/bin/dosai \
     && dosai --help \

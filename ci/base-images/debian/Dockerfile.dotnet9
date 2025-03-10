@@ -1,13 +1,13 @@
 FROM mcr.microsoft.com/dotnet/sdk:9.0
 
 ARG JAVA_VERSION=23.0.2-tem
-ARG NODE_VERSION=23.6.1
+ARG NODE_VERSION=23.8.0
 
 ENV JAVA_VERSION=$JAVA_VERSION \
     JAVA_HOME="/opt/java/${JAVA_VERSION}" \
     DOTNET_GENERATE_ASPNET_CERTIFICATE=false \
     DOTNET_NOLOGO=true \
-    DOTNET_USE_POLLING_FILE_WATCHER=true \
+    DOTNET_USE_POLLING_FILE_WATCHER=false \
     NUGET_XMLDOC_MODE=skip \
     DOTNET_RUNNING_IN_CONTAINER=true \
     DOTNET_CLI_TELEMETRY_OPTOUT=1 \
@@ -28,5 +28,7 @@ RUN apt-get update && apt-get install -qq -y --no-install-recommends curl bash b
 COPY ci/base-images/nuget /usr/lib/nuget
 RUN mv /usr/lib/nuget/nuget.exe /usr/lib/nuget/NuGet.exe \
     && dotnet --list-sdks \
+    && dotnet workload install wasm-tools \
+    && dotnet workload list \
     && nuget help
 CMD ["/bin/bash"]

@@ -1,8 +1,8 @@
 FROM ruby:3.3.6
 
 ARG JAVA_VERSION=23.0.2-tem
-ARG NODE_VERSION=23.6.1
-ARG ATOM_RUBY_VERSION=3.4.1
+ARG NODE_VERSION=23.8.0
+ARG ATOM_RUBY_VERSION=3.4.2
 
 ENV JAVA_VERSION=$JAVA_VERSION \
     JAVA_HOME="/opt/java/${JAVA_VERSION}" \
@@ -20,7 +20,7 @@ RUN apt-get update && apt-get install -qq -y --no-install-recommends curl bash b
     && ./tmp/install.sh && rm /tmp/install.sh \
     && node -v \
     && npm -v \
-    && gem install bundler \
+    && gem install bundler cocoapods \
     && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
     && rm -rf /var/lib/apt/lists/*
 

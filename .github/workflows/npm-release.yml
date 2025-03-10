@@ -34,8 +34,9 @@ jobs:
     - name: Release npm package
       if: startsWith(github.ref, 'refs/tags/')
       run: |
+        npm install --global corepack@latest
         corepack enable
-        corepack pnpm install
+        corepack pnpm install --config.strict-dep-builds=true
         npm config set //registry.npmjs.org/:_authToken=$NODE_AUTH_TOKEN
         echo "cyclonedx:registry=https://registry.npmjs.org" > ~/.npmrc
         NPM_CONFIG_PROVENANCE=true corepack pnpm publish --access=public --no-git-checks
@@ -45,8 +46,9 @@ jobs:
     - name: jsr publish
       if: startsWith(github.ref, 'refs/tags/')
       run: |
+        npm install --global corepack@latest
         corepack enable
-        corepack pnpm install
+        corepack pnpm install --config.strict-dep-builds=true
         npx jsr publish --allow-dirty
       continue-on-error: true
       env:
@@ -72,11 +74,11 @@ jobs:
         ./contrib/free_disk_space.sh
     - name: Setup nydus
       run: |
-        curl -LO https://github.com/dragonflyoss/nydus/releases/download/v2.2.4/nydus-static-v2.2.4-linux-amd64.tgz
-        tar -xvf nydus-static-v2.2.4-linux-amd64.tgz
+        curl -LO https://github.com/dragonflyoss/nydus/releases/download/v2.3.0/nydus-static-v2.3.0-linux-amd64.tgz
+        tar -xvf nydus-static-v2.3.0-linux-amd64.tgz
         chmod +x nydus-static/*
         mv nydus-static/* /usr/local/bin/
-        rm -rf nydus-static-v2.2.4-linux-amd64.tgz nydus-static
+        rm -rf nydus-static-v2.3.0-linux-amd64.tgz nydus-static
     - run: docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v3
@@ -111,8 +113,9 @@ jobs:
       continue-on-error: true
     - name: Attach cdx sbom
       run: |
+        npm install --global corepack@latest
         corepack enable
-        corepack pnpm install
+        corepack pnpm install --config.strict-dep-builds=true
         node bin/cdxgen.js -t docker -o cdxgen-oci-image.cdx.json ghcr.io/cyclonedx/cdxgen:latest
         oras attach --artifact-type sbom/cyclonedx ghcr.io/cyclonedx/cdxgen:latest ./cdxgen-oci-image.cdx.json:application/json
         oras discover --format tree ghcr.io/cyclonedx/cdxgen:latest
@@ -174,8 +177,9 @@ jobs:
           cache-to: type=gha,mode=max,scope=cdxgen-secure
       - name: Attach cdx sbom
         run: |
+          npm install --global corepack@latest
           corepack enable
-          corepack pnpm install
+          corepack pnpm install --config.strict-dep-builds=true
           node bin/cdxgen.js -t docker -o cdxgen-secure-oci-image.cdx.json ghcr.io/cyclonedx/cdxgen-secure:latest
           oras attach --artifact-type sbom/cyclonedx ghcr.io/cyclonedx/cdxgen-secure:latest ./cdxgen-secure-oci-image.cdx.json:application/json
           oras discover --format tree ghcr.io/cyclonedx/cdxgen-secure:latest

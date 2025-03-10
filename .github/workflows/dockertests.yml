@@ -39,8 +39,9 @@ jobs:
           ./contrib/free_disk_space.sh
       - name: npm install, build and test
         run: |
+          npm install --global corepack@latest
           corepack enable
-          corepack pnpm install --package-import-method copy
+          corepack pnpm install --config.strict-dep-builds=true --package-import-method copy
           corepack pnpm test
           mkdir -p bomresults repotests
         env:
@@ -82,7 +83,7 @@ jobs:
           rm /tmp/scanslim.tar
           ls -ltr bomresults
         env:
-          CDXGEN_DEBUG_MODE: debug
+          CDXGEN_DEBUG_MODE: verbose
       - name: dockertests arm
         if: matrix.os == 'ubuntu-24.04-arm'
         run: |
@@ -94,11 +95,9 @@ jobs:
           docker rmi almalinux:9.4-minimal
           bin/cdxgen.js centos:latest -t oci -o bomresults/bom-centos.json --fail-on-error
           docker rmi centos:latest
-          bin/cdxgen.js -t docker-compose test/data -o bomresults/bom-dc.json --fail-on-error
-          bin/cdxgen.js -t operator repotests/grafana-operator -o bomresults/bom-op.json --fail-on-error
           ls -ltr bomresults
         env:
-          CDXGEN_DEBUG_MODE: debug
+          CDXGEN_DEBUG_MODE: verbose
   linux-dockertar-tests:
     strategy:
       fail-fast: true
@@ -128,8 +127,9 @@ jobs:
           ./contrib/free_disk_space.sh
       - name: npm install, build and test
         run: |
+          npm install --global corepack@latest
           corepack enable
-          corepack pnpm install --package-import-method copy
+          corepack pnpm install --config.strict-dep-builds=true --package-import-method copy
           corepack pnpm test
           mkdir -p bomresults repotests
         env:
@@ -151,7 +151,7 @@ jobs:
           bin/cdxgen.js /tmp/alpine.tar -t docker -o bomresults/bom-alpine.tar.json --fail-on-error
           ls -ltr bomresults
         env:
-          CDXGEN_DEBUG_MODE: debug
+          CDXGEN_DEBUG_MODE: verbose
   os-tests:
     strategy:
       fail-fast: true
@@ -181,8 +181,9 @@ jobs:
           ./contrib/free_disk_space.sh
       - name: npm install, build and test
         run: |
+          npm install --global corepack@latest
           corepack enable
-          corepack pnpm install --package-import-method copy
+          corepack pnpm install --config.strict-dep-builds=true --package-import-method copy
           mkdir -p bomresults
         env:
           CI: true
@@ -190,7 +191,7 @@ jobs:
         run: |
           bin/cdxgen.js -t os -o bomresults/bom-os.json --fail-on-error
         env:
-          CDXGEN_DEBUG_MODE: debug
+          CDXGEN_DEBUG_MODE: verbose
       - uses: actions/upload-artifact@v4
         if: matrix.os == 'ubuntu-24.04-arm'
         with:
@@ -222,8 +223,9 @@ jobs:
           java-version: ${{ matrix.java-version }}
       - name: npm install, build
         run: |
+          npm install --global corepack@latest
           corepack enable
-          corepack pnpm install --package-import-method copy
+          corepack pnpm install --config.strict-dep-builds=true --package-import-method copy
           mkdir bomresults
         env:
           CI: true
@@ -232,7 +234,7 @@ jobs:
           node bin/cdxgen.js -t os -o bomresults/bom-win.json --fail-on-error
           dir bomresults
         env:
-          CDXGEN_DEBUG_MODE: debug
+          CDXGEN_DEBUG_MODE: verbose
       - uses: actions/upload-artifact@v4
         with:
           name: bomresults-win

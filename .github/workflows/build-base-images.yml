@@ -20,7 +20,7 @@ env:
 jobs:
   sle-lang-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: ubuntu-latest
+    runs-on: 'ubuntu-24.04'
     permissions:
       contents: read
       packages: write
@@ -58,7 +58,7 @@ jobs:
 
   sle-dotnet-image:
     if: false
-    runs-on: ubuntu-latest
+    runs-on: 'ubuntu-24.04'
     permissions:
       contents: read
       packages: write
@@ -69,7 +69,8 @@ jobs:
         uses: docker/setup-qemu-action@v3
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
-
+      - name: qemu workaround
+        run: docker run --rm --privileged multiarch/qemu-user-static --reset -p yes -c yes
       - name: Log in to the Container registry
         uses: docker/login-action@v3
         with:
@@ -97,7 +98,7 @@ jobs:
 
   cdxgen-dotnet-image:
     if: false
-    runs-on: ubuntu-latest
+    runs-on: 'ubuntu-24.04'
     needs: sle-dotnet-image
     permissions:
       packages: write
@@ -108,7 +109,8 @@ jobs:
         uses: docker/setup-qemu-action@v3
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
-
+      - name: qemu workaround
+        run: docker run --rm --privileged multiarch/qemu-user-static --reset -p yes -c yes
       - name: Log in to the Container registry
         uses: docker/login-action@v3
         with:
@@ -148,7 +150,7 @@ jobs:
 
   debian-dotnet6-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: ubuntu-latest
+    runs-on: 'ubuntu-24.04'
     permissions:
       contents: read
       packages: write
@@ -186,7 +188,7 @@ jobs:
 
   cdxgen-debian-dotnet6-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: ubuntu-latest
+    runs-on: 'ubuntu-24.04'
     needs: debian-dotnet6-image
     permissions:
       packages: write
@@ -237,7 +239,7 @@ jobs:
 
   sle-ruby25-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: ubuntu-latest
+    runs-on: 'ubuntu-24.04'
     permissions:
       contents: read
       packages: write
@@ -248,7 +250,8 @@ jobs:
         uses: docker/setup-qemu-action@v3
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
-
+      - name: qemu workaround
+        run: docker run --rm --privileged multiarch/qemu-user-static --reset -p yes -c yes
       - name: Log in to the Container registry
         uses: docker/login-action@v3
         with:
@@ -275,7 +278,7 @@ jobs:
 
   cdxgen-sle-ruby25-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: ubuntu-latest
+    runs-on: 'ubuntu-24.04'
     needs: sle-ruby25-image
     permissions:
       packages: write
@@ -286,7 +289,8 @@ jobs:
         uses: docker/setup-qemu-action@v3
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
-
+      - name: qemu workaround
+        run: docker run --rm --privileged multiarch/qemu-user-static --reset -p yes -c yes
       - name: Log in to the Container registry
         uses: docker/login-action@v3
         with:
@@ -314,18 +318,12 @@ jobs:
 
   debian-ruby33-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: ubuntu-latest
+    runs-on: 'macos-hosted'
     permissions:
       contents: read
       packages: write
     steps:
       - uses: actions/checkout@v4
-
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
       - name: Log in to the Container registry
         uses: docker/login-action@v3
         with:
@@ -352,18 +350,12 @@ jobs:
 
   cdxgen-debian-ruby33-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: ubuntu-latest
+    runs-on: 'macos-hosted'
     needs: debian-ruby33-image
     permissions:
       packages: write
     steps:
       - uses: actions/checkout@v4
-
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
       - name: Log in to the Container registry
         uses: docker/login-action@v3
         with:
@@ -391,18 +383,12 @@ jobs:
 
   debian-ruby34-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: ubuntu-latest
+    runs-on: 'macos-hosted'
     permissions:
       contents: read
       packages: write
     steps:
       - uses: actions/checkout@v4
-
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
       - name: Log in to the Container registry
         uses: docker/login-action@v3
         with:
@@ -429,18 +415,12 @@ jobs:
 
   cdxgen-debian-ruby34-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: ubuntu-latest
+    runs-on: 'macos-hosted'
     needs: debian-ruby34-image
     permissions:
       packages: write
     steps:
       - uses: actions/checkout@v4
-
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
       - name: Log in to the Container registry
         uses: docker/login-action@v3
         with:
@@ -468,18 +448,12 @@ jobs:
 
   debian-ruby18-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: ubuntu-latest
+    runs-on: 'macos-hosted'
     permissions:
       contents: read
       packages: write
     steps:
       - uses: actions/checkout@v4
-
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
       - name: Log in to the Container registry
         uses: docker/login-action@v3
         with:
@@ -499,25 +473,19 @@ jobs:
         with:
           context: .
           file: ci/base-images/debian/Dockerfile.ruby18
-          platforms: linux/amd64,linux/arm64
+          platforms: linux/amd64
           push: true
           tags: ${{ steps.meta-debian-ruby18.outputs.tags }}
           labels: ${{ steps.meta-debian-ruby18.outputs.labels }}
 
   debian-ruby26-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: ubuntu-latest
+    runs-on: 'macos-hosted'
     permissions:
       contents: read
       packages: write
     steps:
       - uses: actions/checkout@v4
-
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
       - name: Log in to the Container registry
         uses: docker/login-action@v3
         with:
@@ -537,25 +505,19 @@ jobs:
         with:
           context: .
           file: ci/base-images/debian/Dockerfile.ruby26
-          platforms: linux/amd64,linux/arm64
+          platforms: linux/amd64
           push: true
           tags: ${{ steps.meta-debian-ruby26.outputs.tags }}
           labels: ${{ steps.meta-debian-ruby26.outputs.labels }}
 
   cdxgen-debian-ruby26-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: ubuntu-latest
+    runs-on: 'macos-hosted'
     needs: debian-ruby26-image
     permissions:
       packages: write
     steps:
       - uses: actions/checkout@v4
-
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
       - name: Log in to the Container registry
         uses: docker/login-action@v3
         with:
@@ -576,14 +538,14 @@ jobs:
         with:
           context: .
           file: ci/base-images/cdxgen/debian/Dockerfile.ruby26
-          platforms: linux/amd64,linux/arm64
+          platforms: linux/amd64
           push: true
           tags: ghcr.io/cyclonedx/cdxgen-debian-ruby26:v11
           labels: ${{ steps.meta-cdxgen-debian-ruby26.outputs.labels }}
 
   sle-dotnet7-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: ubuntu-latest
+    runs-on: 'ubuntu-24.04'
     permissions:
       contents: read
       packages: write
@@ -614,14 +576,14 @@ jobs:
         with:
           context: .
           file: ci/base-images/sle/Dockerfile.dotnet7
-          platforms: linux/amd64,linux/arm64
+          platforms: linux/amd64
           push: true
           tags: ${{ steps.meta-bci-dotnet7.outputs.tags }}
           labels: ${{ steps.meta-bci-dotnet7.outputs.labels }}
 
   cdxgen-dotnet7-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: ubuntu-latest
+    runs-on: 'ubuntu-24.04'
     needs: sle-dotnet7-image
     permissions:
       packages: write
@@ -653,7 +615,7 @@ jobs:
         with:
           context: .
           file: ci/base-images/cdxgen/Dockerfile.dotnet7
-          platforms: linux/amd64,linux/arm64
+          platforms: linux/amd64
           push: true
           tags: ghcr.io/cyclonedx/cdxgen-dotnet7:v11
           labels: ${{ steps.meta-cdxgen-dotnet7.outputs.labels }}
@@ -664,14 +626,14 @@ jobs:
         with:
           context: .
           file: ci/base-images/cdxgen/Dockerfile.dotnet7
-          platforms: linux/amd64,linux/arm64
+          platforms: linux/amd64
           push: true
           tags: ${{ steps.meta-cdxgen-dotnet7.outputs.tags }}
           labels: ${{ steps.meta-cdxgen-dotnet7.outputs.labels }}
 
   sle-dotnet8-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: ubuntu-latest
+    runs-on: 'ubuntu-24.04'
     permissions:
       contents: read
       packages: write
@@ -702,14 +664,14 @@ jobs:
         with:
           context: .
           file: ci/base-images/sle/Dockerfile.dotnet8
-          platforms: linux/amd64,linux/arm64
+          platforms: linux/amd64
           push: true
           tags: ${{ steps.meta-bci-dotnet8.outputs.tags }}
           labels: ${{ steps.meta-bci-dotnet8.outputs.labels }}
 
   cdxgen-dotnet8-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: ubuntu-latest
+    runs-on: 'ubuntu-24.04'
     needs: sle-dotnet8-image
     permissions:
       packages: write
@@ -741,7 +703,7 @@ jobs:
         with:
           context: .
           file: ci/base-images/cdxgen/Dockerfile.dotnet8
-          platforms: linux/amd64,linux/arm64
+          platforms: linux/amd64
           push: true
           tags: ghcr.io/cyclonedx/cdxgen-dotnet8:v11
           labels: ${{ steps.meta-cdxgen-dotnet8.outputs.labels }}
@@ -752,14 +714,14 @@ jobs:
         with:
           context: .
           file: ci/base-images/cdxgen/Dockerfile.dotnet8
-          platforms: linux/amd64,linux/arm64
+          platforms: linux/amd64
           push: true
           tags: ${{ steps.meta-cdxgen-dotnet8.outputs.tags }}
           labels: ${{ steps.meta-cdxgen-dotnet8.outputs.labels }}
 
   debian-dotnet8-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: ubuntu-latest
+    runs-on: 'ubuntu-24.04'
     permissions:
       contents: read
       packages: write
@@ -797,7 +759,7 @@ jobs:
 
   cdxgen-debian-dotnet8-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: ubuntu-latest
+    runs-on: 'ubuntu-24.04'
     needs: debian-dotnet8-image
     permissions:
       packages: write
@@ -839,7 +801,7 @@ jobs:
         if: startsWith(github.ref, 'refs/tags/')
         with:
           context: .
-          file: ci/base-images/cdxgen/Dockerfile.dotnet8
+          file: ci/base-images/cdxgen/debian/Dockerfile.dotnet8
           platforms: linux/amd64,linux/arm64
           push: true
           tags: ${{ steps.meta-cdxgen-debian-dotnet8.outputs.tags }}
@@ -847,7 +809,7 @@ jobs:
 
   sle-dotnet9-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: ubuntu-latest
+    runs-on: 'ubuntu-24.04'
     permissions:
       contents: read
       packages: write
@@ -878,14 +840,14 @@ jobs:
         with:
           context: .
           file: ci/base-images/sle/Dockerfile.dotnet9
-          platforms: linux/amd64,linux/arm64
+          platforms: linux/amd64
           push: true
           tags: ${{ steps.meta-bci-dotnet9.outputs.tags }}
           labels: ${{ steps.meta-bci-dotnet9.outputs.labels }}
 
   cdxgen-dotnet9-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: ubuntu-latest
+    runs-on: 'ubuntu-24.04'
     needs: sle-dotnet9-image
     permissions:
       packages: write
@@ -917,7 +879,7 @@ jobs:
         with:
           context: .
           file: ci/base-images/cdxgen/Dockerfile.dotnet9
-          platforms: linux/amd64,linux/arm64
+          platforms: linux/amd64
           push: true
           tags: ghcr.io/cyclonedx/cdxgen-dotnet9:v11
           labels: ${{ steps.meta-cdxgen-dotnet9.outputs.labels }}
@@ -928,14 +890,14 @@ jobs:
         with:
           context: .
           file: ci/base-images/cdxgen/Dockerfile.dotnet9
-          platforms: linux/amd64,linux/arm64
+          platforms: linux/amd64
           push: true
           tags: ${{ steps.meta-cdxgen-dotnet9.outputs.tags }}
           labels: ${{ steps.meta-cdxgen-dotnet9.outputs.labels }}
 
   debian-dotnet9-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: ubuntu-latest
+    runs-on: 'ubuntu-24.04'
     permissions:
       contents: read
       packages: write
@@ -973,8 +935,8 @@ jobs:
 
   cdxgen-debian-dotnet9-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: ubuntu-latest
-    needs: debian-dotnet8-image
+    runs-on: 'ubuntu-24.04'
+    needs: debian-dotnet9-image
     permissions:
       packages: write
     steps:
@@ -1021,9 +983,87 @@ jobs:
           tags: ${{ steps.meta-cdxgen-debian-dotnet9.outputs.tags }}
           labels: ${{ steps.meta-cdxgen-debian-dotnet9.outputs.labels }}
 
+  debian-swift-image:
+    if: github.repository == 'CycloneDX/cdxgen'
+    runs-on: 'macos-hosted'
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Log in to the Container registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta-debian-swift
+        uses: docker/metadata-action@v5
+        with:
+          images: |
+            ghcr.io/cyclonedx/debian-swift
+            ghcr.io/cyclonedx/debian-swift6
+
+      - name: Build and push Docker images
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ci/base-images/debian/Dockerfile.swift
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ steps.meta-debian-swift.outputs.tags }}
+          labels: ${{ steps.meta-debian-swift.outputs.labels }}
+
+  cdxgen-debian-swift-image:
+    if: github.repository == 'CycloneDX/cdxgen'
+    runs-on: 'macos-hosted'
+    needs: debian-swift-image
+    permissions:
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Log in to the Container registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta-cdxgen-debian-swift
+        uses: docker/metadata-action@v5
+        with:
+          images: |
+            ghcr.io/cyclonedx/cdxgen-debian-swift
+            ghcr.io/cyclonedx/cdxgen-debian-swift6
+
+      - name: Build and push Docker images
+        uses: docker/build-push-action@v5
+        if: github.ref == 'refs/heads/master'
+        with:
+          context: .
+          file: ci/base-images/cdxgen/debian/Dockerfile.swift
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ghcr.io/cyclonedx/cdxgen-debian-swift:v11,ghcr.io/cyclonedx/cdxgen-debian-swift6:v11
+          labels: ${{ steps.meta-cdxgen-debian-swift.outputs.labels }}
+
+      - name: Build and push Docker images
+        uses: docker/build-push-action@v5
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          context: .
+          file: ci/base-images/cdxgen/debian/Dockerfile.swift
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ steps.meta-cdxgen-debian-swift.outputs.tags }}
+          labels: ${{ steps.meta-cdxgen-debian-swift.outputs.labels }}
+
   sle-java-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: ubuntu-latest
+    runs-on: 'ubuntu-24.04'
     permissions:
       contents: read
       packages: write
@@ -1061,7 +1101,7 @@ jobs:
 
   sle-java-slim-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: ubuntu-latest
+    runs-on: 'ubuntu-24.04'
     permissions:
       contents: read
       packages: write
@@ -1099,7 +1139,7 @@ jobs:
 
   cdxgen-java-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: ubuntu-latest
+    runs-on: 'ubuntu-24.04'
     needs: sle-java-image
     permissions:
       packages: write
@@ -1150,7 +1190,7 @@ jobs:
 
   cdxgen-java-slim-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: ubuntu-latest
+    runs-on: 'ubuntu-24.04'
     needs: sle-java-slim-image
     permissions:
       packages: write
@@ -1201,7 +1241,7 @@ jobs:
 
   sle-node20-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: ubuntu-latest
+    runs-on: 'ubuntu-24.04'
     permissions:
       contents: read
       packages: write
@@ -1239,7 +1279,7 @@ jobs:
 
   cdxgen-node20-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: ubuntu-latest
+    runs-on: 'ubuntu-24.04'
     needs: sle-node20-image
     permissions:
       packages: write
@@ -1290,7 +1330,7 @@ jobs:
 
   sle-java17-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: ubuntu-latest
+    runs-on: 'ubuntu-24.04'
     permissions:
       contents: read
       packages: write
@@ -1328,7 +1368,7 @@ jobs:
 
   sle-java17-slim-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: ubuntu-latest
+    runs-on: 'ubuntu-24.04'
     permissions:
       contents: read
       packages: write
@@ -1366,7 +1406,7 @@ jobs:
 
   cdxgen-java17-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: ubuntu-latest
+    runs-on: 'ubuntu-24.04'
     needs: sle-java17-image
     permissions:
       packages: write
@@ -1416,7 +1456,7 @@ jobs:
 
   cdxgen-java17-slim-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: ubuntu-latest
+    runs-on: 'ubuntu-24.04'
     needs: sle-java17-slim-image
     permissions:
       packages: write
@@ -1466,7 +1506,7 @@ jobs:
 
   cdxgen-python-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: ubuntu-latest
+    runs-on: 'ubuntu-24.04'
     needs: sle-lang-image
     permissions:
       packages: write
@@ -1517,7 +1557,7 @@ jobs:
 
   sle-python311-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: ubuntu-latest
+    runs-on: 'ubuntu-24.04'
     permissions:
       contents: read
       packages: write
@@ -1555,7 +1595,7 @@ jobs:
 
   cdxgen-python311-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: ubuntu-latest
+    runs-on: 'ubuntu-24.04'
     needs: sle-python311-image
     permissions:
       packages: write
@@ -1605,7 +1645,7 @@ jobs:
 
   sle-python36-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: ubuntu-latest
+    runs-on: 'ubuntu-24.04'
     permissions:
       contents: read
       packages: write
@@ -1643,7 +1683,7 @@ jobs:
 
   cdxgen-python36-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: ubuntu-latest
+    runs-on: 'ubuntu-24.04'
     needs: sle-python36-image
     permissions:
       packages: write
@@ -1693,18 +1733,16 @@ jobs:
 
   opensuse-lang-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: ubuntu-latest
+    runs-on: 'ubuntu-24.04'
     permissions:
       contents: read
       packages: write
     steps:
       - uses: actions/checkout@v4
-
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
-
       - name: Log in to the Container registry
         uses: docker/login-action@v3
         with:
@@ -1731,18 +1769,16 @@ jobs:
 
   cdxgen-rolling-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: ubuntu-latest
+    runs-on: 'ubuntu-24.04'
     needs: opensuse-lang-image
     permissions:
       packages: write
     steps:
       - uses: actions/checkout@v4
-
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
-
       - name: Log in to the Container registry
         uses: docker/login-action@v3
         with:
@@ -1770,7 +1806,7 @@ jobs:
 
   opensuse-python310-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: ubuntu-latest
+    runs-on: 'ubuntu-24.04'
     permissions:
       contents: read
       packages: write
@@ -1808,7 +1844,7 @@ jobs:
 
   cdxgen-python310-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: ubuntu-latest
+    runs-on: 'ubuntu-24.04'
     needs: opensuse-python310-image
     permissions:
       packages: write
@@ -1858,7 +1894,7 @@ jobs:
 
   opensuse-python39-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: ubuntu-latest
+    runs-on: 'ubuntu-24.04'
     permissions:
       contents: read
       packages: write
@@ -1896,7 +1932,7 @@ jobs:
 
   cdxgen-python39-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: ubuntu-latest
+    runs-on: 'ubuntu-24.04'
     needs: opensuse-python39-image
     permissions:
       packages: write

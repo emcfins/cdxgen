@@ -24,8 +24,9 @@ jobs:
           java-version: '23'
       - name: npm install, build and test
         run: |
+          npm install --global corepack@latest
           corepack enable
-          corepack pnpm install
+          corepack pnpm install --config.strict-dep-builds=true
           mkdir -p repotests
           mkdir -p bomresults
         env:
@@ -92,4 +93,4 @@ jobs:
           bin/cdxgen.js --no-install-deps -r -t python repotests/bandersnatch -o bomresults/bom-bandersnatch.json --validate
           rm -rf venv
         env:
-          CDXGEN_DEBUG_MODE: debug
+          CDXGEN_DEBUG_MODE: verbose

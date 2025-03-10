@@ -1,4 +1,5 @@
 #! /usr/bin/env bash
+set -e
 
 git clone https://github.com/rbenv/rbenv.git --depth=1 ~/.rbenv
 echo 'export PATH="/root/.rbenv/bin:$PATH"' >> ~/.bashrc
@@ -26,8 +27,9 @@ mv /root/.sdkman/candidates/* /opt/
 rm -rf /root/.sdkman
 
 if [ x"${SKIP_PYTHON}" != "xyes" ]; then
-  python3 -m pip install --no-cache-dir --upgrade pip virtualenv
-  python3 -m pip install --no-cache-dir --upgrade --user pipenv poetry uv
+  python3 --version
+  python3 -m pip install --no-cache-dir --upgrade pip virtualenv --break-system-packages
+  python3 -m pip install --no-cache-dir --upgrade pipenv poetry uv --target /opt/pypi
 fi
 
 if [ x"${SKIP_NODEJS}" != "xyes" ]; then
@@ -35,4 +37,5 @@ if [ x"${SKIP_NODEJS}" != "xyes" ]; then
   chmod +x /root/.nvm/nvm.sh
   source /root/.nvm/nvm.sh
   nvm install ${NODE_VERSION}
+  npm install --global corepack@latest
 fi

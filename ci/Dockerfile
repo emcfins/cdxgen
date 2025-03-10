@@ -4,7 +4,7 @@ LABEL maintainer="cyclonedx" \
       org.opencontainers.image.authors="Prabhu Subramanian <prabhu@appthreat.com>" \
       org.opencontainers.image.source="https://github.com/cyclonedx/cdxgen" \
       org.opencontainers.image.url="https://github.com/cyclonedx/cdxgen" \
-      org.opencontainers.image.version="11.1.x" \
+      org.opencontainers.image.version="11.2.x" \
       org.opencontainers.image.vendor="cyclonedx" \
       org.opencontainers.image.licenses="Apache-2.0" \
       org.opencontainers.image.title="cdxgen" \
@@ -17,13 +17,14 @@ ARG SWIFT_BRANCH=swift-6.0.3-release
 ARG SWIFT_VERSION=swift-6.0.3-RELEASE
 ARG SWIFT_WEBROOT=https://download.swift.org
 ARG JAVA_VERSION=23.0.2-tem
-ARG SBT_VERSION=1.10.7
+ARG SBT_VERSION=1.10.10
 ARG MAVEN_VERSION=3.9.9
 ARG GRADLE_VERSION=8.12.1
-ARG GO_VERSION=1.23.5
-ARG NODE_VERSION=23.6.1
+ARG GO_VERSION=1.24.0
+ARG NODE_VERSION=23.8.0
 ARG PYTHON_VERSION=3.12
-ARG RUBY_VERSION=3.4.1
+ARG RUBY_VERSION=3.4.2
+ARG SCALA_VERSION=3.6.4
 
 ENV GOPATH=/opt/app-root/go \
     JAVA_VERSION=$JAVA_VERSION \
@@ -35,6 +36,8 @@ ENV GOPATH=/opt/app-root/go \
     MAVEN_HOME="/root/.sdkman/candidates/maven/${MAVEN_VERSION}" \
     GRADLE_HOME="/root/.sdkman/candidates/gradle/${GRADLE_VERSION}" \
     SBT_HOME="/root/.sdkman/candidates/sbt/${SBT_VERSION}" \
+    SCALA_VERSION=$SCALA_VERSION \
+    SCALA_HOME="/root/.sdkman/candidates/scala/${SCALA_VERSION}" \
     PYTHON_VERSION=3.12 \
     PYTHON_CMD=/usr/bin/python3.12 \
     RUBY_VERSION=$RUBY_VERSION \
@@ -64,7 +67,7 @@ ENV GOPATH=/opt/app-root/go \
     RUBYOPT="--yjit" \
     RUBY_BUILD_BUILD_PATH="/tmp/rbenv" \
     RUBY_BUILD_HTTP_CLIENT=curl
-ENV PATH=${PATH}:/root/.nvm/versions/node/v${NODE_VERSION}/bin:${JAVA_HOME}/bin:${MAVEN_HOME}/bin:${GRADLE_HOME}/bin:${SBT_HOME}/bin:${GOPATH}/bin:/usr/local/go/bin:/usr/local/bin/:/root/.local/bin:${ANDROID_HOME}/cmdline-tools/latest/bin:${ANDROID_HOME}/tools:${ANDROID_HOME}/tools/bin:${ANDROID_HOME}/platform-tools:/root/.cargo/bin:/opt/pypi/bin:/root/.rbenv/bin:/root/.rbenv/versions/3.4.1/bin:
+ENV PATH=${PATH}:/root/.nvm/versions/node/v${NODE_VERSION}/bin:${JAVA_HOME}/bin:${MAVEN_HOME}/bin:${GRADLE_HOME}/bin:${SCALA_HOME}/bin:${SBT_HOME}/bin:${GOPATH}/bin:/usr/local/go/bin:/usr/local/bin/:/root/.local/bin:${ANDROID_HOME}/cmdline-tools/latest/bin:${ANDROID_HOME}/tools:${ANDROID_HOME}/tools/bin:${ANDROID_HOME}/platform-tools:/root/.cargo/bin:/opt/pypi/bin:/root/.rbenv/bin:/root/.rbenv/versions/3.4.1/bin:
 
 COPY . /opt/cdxgen
 
@@ -120,6 +123,7 @@ RUN set -e; \
     && sdk install java $JAVA_VERSION \
     && sdk install maven $MAVEN_VERSION \
     && sdk install gradle $GRADLE_VERSION \
+    && sdk install scala $SCALA_VERSION \
     && sdk install sbt $SBT_VERSION \
     && SWIFT_WEBDIR="$SWIFT_WEBROOT/$SWIFT_BRANCH/$(echo $SWIFT_PLATFORM | tr -d .)$OS_ARCH_SUFFIX" \
     && SWIFT_BIN_URL="$SWIFT_WEBDIR/$SWIFT_VERSION/$SWIFT_VERSION-$SWIFT_PLATFORM$OS_ARCH_SUFFIX.tar.gz" \
@@ -156,6 +160,7 @@ RUN set -e; \
     && curl -L --output /usr/local/bin/bazel https://github.com/bazelbuild/bazelisk/releases/latest/download/bazelisk-linux-${GOBIN_VERSION} \
     && chmod +x /usr/local/bin/bazel \
     && useradd -ms /bin/bash cyclonedx \
+    && npm install --global corepack@latest \
     && npm install --unsafe-perm -g node-gyp @microsoft/rush --omit=dev \
     && npx node-gyp install \
     && pecl channel-update pecl.php.net \
@@ -163,10 +168,12 @@ RUN set -e; \
     && echo 'extension=timezonedb.so' >> /etc/php.ini \
     && php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" && php composer-setup.php \
     && mv composer.phar /usr/local/bin/composer \
-    && gem install bundler \
+    && gem install bundler cocoapods \
     && gem --version \
     && bundler --version \
-    && cd /opt/cdxgen && corepack enable && corepack pnpm install --prod --package-import-method copy && corepack pnpm cache delete \
+    && dotnet workload install wasm-tools \
+    && dotnet workload list \
+    && cd /opt/cdxgen && corepack enable && corepack pnpm install --config.strict-dep-builds=true --prod --package-import-method copy && corepack pnpm cache delete \
     && mkdir -p /opt/cdxgen-node-cache \
     && chown -R cyclonedx:cyclonedx /opt/cdxgen /opt/cdxgen-node-cache \
     && chmod a-w -R /opt \
